@@ -77,6 +77,14 @@ $$z_n = \argmin\limits_k \rho (x_n, \mu_k)$$
 </div>
 
 ---
+layout: section
+---
+
+# K-Means demo
+
+[https://cartography-playground.gitlab.io/playgrounds/clustering-comparison/](https://cartography-playground.gitlab.io/playgrounds/clustering-comparison/)
+
+---
 layout: iframe
 
 # K-Means demo
@@ -85,49 +93,73 @@ url: https://cartography-playground.gitlab.io/playgrounds/clustering-comparison/
 
 ---
 
-# Linear Algebra of a Hyperplane
+# Properties of K-Means
 
-* Affine set $L$ (a hyperplane) is defined as $L := \{x_{2 \times 1} ~|~\beta_0 + \beta_1 x_1 + \beta_2 x_2 = 0\}$
+* Initialization:
+   * Centers $\{\mu_k\}_{k=1}^K$ are usually initialized randomly from training objects
+   * Number of clusters (and centers) $K$ is fixed. They act as a hyperparameters.
+* Convergence criteria:
+   * Iterations limit is reached
+   * Centers stop changing significantly
+   * Cluster assignments $\{z_n\}_{n=1}^N$ stop changing
+* Solution:
+   * Depends on starting positions of centers
+   * Sensitive to outliers, may create single-object clusters
+   * It is recommended to run the algorithm with several different initializations and select solution with the minimal within-cluster distance $Q$
 
-<div class="grid grid-cols-[3fr,2fr]">
+
+---
+
+# Elbow method
+
+* How to estimate optimal number of clusters $K$?
+* Consider within-cluster distances $Q^{(K)}$ for all possible $K$:
+$$Q^{(K)} = \sum\limits_{n=1}^N \lVert x_n - \mu_{z_n} \rVert_2^2 \rightarrow \min\limits_{z_1, ..., z_N, \mu_1, ..., \mu_K}$$
+
+<div>
+<figure>
+ <img src="/elbow_1.png" style="width: 1000px !important;">
+</figure>
+</div>
+
+---
+
+# Elbow method
+
+<br>
+<br>
+<div class="grid grid-cols-[4fr,5fr] gap-10">
 <div>
 
-* Properties of $L$:
-   * $\forall x_1, x_2 \in L$ we have $\beta^{T}(x_1 - x_2) = 0$
-      * i.e. $\vec\beta$ is **orthogonal** to $L$
-         * So, $\vec{\beta}^{*} := \frac{\vec\beta}{||\vec\beta||}$ is a **normal** vector to $L$
-
-      * $\forall x_0 \in L$, we have $\beta^{T}x_0 = -\beta_0$
-      * $\forall x \in \R^p$, the **signed distance** is
-<br> $d(L,x) = \beta^{*T} (x - x_0) \propto \beta^{T} (x - x_0)$
-
+* Within-cluster distances $Q^{(K)}$ decreases with increasing $K$
+* The dependence has elbow at the
+optimal number of clusters ($K = 5$)
+* Let’s try to formalize it
 </div>
 <div>
   <figure>
-   <br>
-   <br>
-    <img src="/Hyperplane_ex.png" style="width: 500px">
-    <figcaption style="color:#b3b3b3ff; font-size: 11px">Based on
-      <a href="https://hastie.su.domains/ElemStatLearn/printings/ESLII_print12.pdf#page=149">ESL Fig. 4.15</a>
-    </figcaption>
+    <img src="/elbow_2.png" style="width: 500px !important;">
   </figure>
 </div>
 </div>
 
 ---
 
-# Separating Hyperplanes
+# Elbow method
 
-* We want to find a **separating hyperplane** (if possible), which perfectly separates the observations of two classes, $y = \pm 1$
+<br>
+<br>
+<div class="grid grid-cols-[4fr,5fr] gap-10">
+<div>
 
-$$
-\color{grey}\underbrace{\color{#006}\{x ~|~\beta_0 + \beta^{T} x \lt 0\}}_{\text{\textcolor{grey}{y = -1}}}
-\color{#006}\cup
-\color{grey}\underbrace{\color{#006}\{x ~|~\beta_0 + \beta^{T} x = 0\}}_{\text{\textcolor{grey}{hyper-plane}}}
-\color{#006}\cup
-\color{grey}\underbrace{\color{#006}\{x ~|~\beta_0 + \beta^{T} x \gt 0\}}_{\text{\textcolor{grey}{y = 1}}}
-$$
+* Let's define relative change of within-cluster distance:
+$$D(K) = \frac{\lvert Q^{(K+1)} - Q^{(K)} \rvert}{\lvert Q^{(K)} - Q^{(K-1)} \rvert}$$
+   * This function takes small value for the optimal number of clusters
 
-* **Training**: estimate $\beta_i$ parameters as $\hat{\beta}_i$
-* **Inference**: classify new $x^{*}$ as $\mathrm{sign}(\beta_0 + \beta^{T} x^{*})$ 
-   * Distance of $x_{p \times 1}^{*}$ to the hyperplane, $|\beta_0 + \beta^{T}x^{*}|$, indicates confidence of prediction
+</div>
+<div>
+  <figure>
+    <img src="/elbow_3.png" style="width: 500px !important;">
+  </figure>
+</div>
+</div>

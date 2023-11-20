@@ -78,15 +78,15 @@ src: ./slides/3_quality_metrics.md
 ---
 
 ---
-src: ./slides/4_summary.md
+src: ./slides/4_hierarchical_clustering.md
 ---
 
 ---
-src: ./slides/5_SVC.md
+src: ./slides/5_dbscan.md
 ---
 
 ---
-src: ./slides/6_SVM.md
+src: ./slides/6_summary.md
 ---
 
 ---
